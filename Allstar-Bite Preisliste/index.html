@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Allstars-Bites | Full Menu Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --custom-bg: url('hintergrund.png'); 
+            --chalk-white: rgba(255, 255, 255, 0.95);
+            --neon-teal: #00ffcc;
+            --neon-red: #ff4d4d;
+            --font-main: 'Shadows Into Light', cursive;
+        }
+
+        body {
+            background-color: #1a1a1a;
+            background-image: var(--custom-bg);
+            background-size: cover;
+            background-attachment: fixed;
+            color: var(--chalk-white);
+            font-family: var(--font-main);
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .chalkboard {
+            background: rgba(10, 10, 10, 0.85);
+            border: 5px solid #222;
+            border-radius: 15px;
+            padding: 30px;
+            width: 100%;
+            max-width: 1300px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.9);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px dashed #444;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo-box {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-box img {
+            max-height: 100px; /* Etwas größer, da kein Text daneben steht */
+            width: auto;
+        }
+
+        .top-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            background: rgba(255,255,255,0.05);
+            padding: 8px 15px;
+            border: 1px solid #444;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .magic-btn {
+            background: var(--neon-teal);
+            color: black;
+            border: none;
+            padding: 5px 15px;
+            font-family: var(--font-main);
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .reset-btn {
+            background: rgba(94, 1, 1, 0);
+            color: var(--neon-red);
+            border: 1px solid var(--neon-red);
+            padding: 5px 15px;
+            font-family: var(--font-main);
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .reset-btn:hover {
+            background: var(--neon-red);
+            color: white;
+        }
+
+        .magic-btn:hover {
+            box-shadow: 0 0 10px var(--neon-teal);
+            transform: translateY(-1px);
+        }
+
+        .delivery-section {
+            margin-bottom: 30px;
+            text-align: center;
+            background: rgba(255,255,255,0.03);
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
+
+        .delivery-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .zone-option {
+            cursor: pointer;
+            padding: 8px 20px;
+            border: 2px solid #444;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+
+        .zone-option.active {
+            border-color: var(--neon-teal);
+            background: rgba(0, 255, 204, 0.1);
+            color: var(--neon-teal);
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .category { 
+            background: rgba(255,255,255,0.02); 
+            padding: 15px; 
+            border-radius: 8px;
+            border-top: 2px solid #555;
+            height: fit-content;
+        }
+
+        .category h3 {
+            text-align: center;
+            text-transform: uppercase;
+            margin-top: 0;
+            border-bottom: 1px solid #333;
+            font-size: 1.5em;
+        }
+
+        .item-row { 
+            display: flex; 
+            justify-content: space-between; 
+            margin-bottom: 10px; 
+            align-items: center;
+        }
+
+        .item-name { flex: 1; }
+        .item-price { color: #888; margin-right: 10px; font-size: 0.9em; }
+
+        input[type="number"] {
+            width: 55px;
+            background: #222;
+            border: 1px solid #555;
+            color: white;
+            padding: 4px;
+            text-align: center;
+            border-radius: 4px;
+            font-family: var(--font-main);
+        }
+
+        .footer-total {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 2.2em;
+            border-top: 4px double #444;
+            padding-top: 15px;
+        }
+
+        .made-by {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 1.1em;
+            opacity: 0.5;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        #total-price { color: var(--neon-teal); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="chalkboard">
+    <div class="header-top">
+        <div class="logo-box">
+            <img src="logo.png" alt="Allstars-Bites Logo" onerror="this.style.display='none'">
+        </div>
+        
+        <div class="top-controls">
+            <div class="control-group">
+                <input type="number" id="target-price" placeholder="Preis $" title="Exakter Preis">
+                <label style="font-size: 0.9em; cursor: pointer;">
+                    <input type="checkbox" id="allow-alcohol" checked> Alk.
+                </label>
+                <button class="magic-btn" onclick="fillExactByPrice()">✨ Surprise</button>
+            </div>
+
+            <div class="control-group">
+                RABATT: <input type="number" id="discount" value="0" min="0" max="100"> %
+                <button class="reset-btn" onclick="resetAll()">🔄 Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="delivery-section">
+        <h3>📍 LIEFERZUSCHLAG</h3>
+        <div class="delivery-grid">
+            <div class="zone-option" data-delivery="0" onclick="selectZone(this)">KEINE</div>
+            <div class="zone-option" data-delivery="5000" onclick="selectZone(this)">STADT ($5k)</div>
+            <div class="zone-option" data-delivery="10000" onclick="selectZone(this)">SANDY ($10k)</div>
+            <div class="zone-option" data-delivery="15000" onclick="selectZone(this)">PALETO ($15k)</div>
+        </div>
+    </div>
+
+    <div class="menu-grid">
+        <div class="category">
+            <h3>🍔 BURGER</h3>
+            <div class="item-row"><span class="item-name">Hamburger</span><span class="item-price">$540</span><input type="number" class="qty" data-price="540" data-alc="false" value="0"></div>
+            <div class="item-row"><span class="item-name">Double Bacon Cheeseburger</span><span class="item-price">$550</span><input type="number" class="qty" data-price="550" data-alc="false" value="0"></div>
+            <div class="item-row"><span class="item-name">Veggie Camembert Burger</span><span class="item-price">$540</span><input type="number" class="qty" data-price="540" data-alc="false" value="0"></div>
+            <div class="item-row"><span class="item-name">BBQ Burger mit Rippchen</span><span class="item-price">$555</span><input type="number" class="qty" data-price="555" data-alc="false" value="0"></div>
+        </div>
+
+        <div class="category">
+            <h3>🍟 SIDES</h3>
+            <div class="item-row"><span class="item-name">Onion Rings</span><span class="item-price">$450</span><input type="number" class="qty" data-price="450" data-alc="false" value="0"></div>
+            <div class="item-row"><span class="item-name">American Coleslaw</span><span class="item-price">$450</span><input type="number" class="qty" data-price="450" data-alc="false" value="0"></div>
+            <div class="item-row"><span class="item-name">Curly Fries</span><span class="item-price">$450</span><input type="number" class="qty" data-price="450" data-alc="false" value="0"></div>
+            <div class="item-row"><span class="item-name">Nuggets mit Dip</span><span class="item-price">$450</span><input type="number" class="qty" data-price="450" data-alc="false" value="0"></div>
+            <div class="item-row"><span class="item-name">Trüffelkartoffel-Pommes</span><span class="item-price">$450</span><input type="number" class="qty" data-price="450" data-alc="false" value="0"></div>
+        </div>
+
+        <div class="category">
+            <h3>🍩 SWEETS</h3>
+            <div class="item-row"><span class="item-name">Crispy Apfeltasche</span><span class="item-price">$480</span><input type="number" class="qty" data-price="480" data-alc="false" value="0"></div>
+            <div class="item-row"><span class="item-name">Churros</span><span class="item-price">$480</span><input type="number" class="qty" data-price="480" data-alc="false" value="0"></div>
+            <div class="item-row"><span class="item-name">Dessert Burger</span><span class="item-price">$495</span><input type="number" class="qty" data-price="495" data-alc="false" value="0"></div>
+            <div class="item-row"><span class="item-name">Donut</span><span class="item-price">$460</span><input type="number" class="qty" data-price="460" data-alc="false" value="0"></div>
+        </div>
+
+        <div class="category">
+            <h3>🥤 Drinks</h3>
+            <div class="item-row"><span class="item-name">Cola</span><span class="item-price">$515</span><input type="number" class="qty" data-price="515" data-alc="false" value="0"></div>
+            <div class="item-row"><span class="item-name">Berry Zest</span><span class="item-price">$515</span><input type="number" class="qty" data-price="515" data-alc="false" value="0"></div>
+            <div class="item-row"><span class="item-name">Apple Peach Punch</span><span class="item-price">$515</span><input type="number" class="qty" data-price="515" data-alc="false" value="0"></div>
+            <div class="item-row"><span class="item-name">Purple Punch</span><span class="item-price">$515</span><input type="number" class="qty" data-price="515" data-alc="false" value="0"></div>
+        </div>
+        
+        <div class="category">
+            <h3>🍹 NON ALCOHOLIC</h3>
+            <div class="item-row"><span class="item-name">GSK Mocktail</span><span class="item-price">$560</span><input type="number" class="qty" data-price="560" data-alc="false" value="0"></div>
+            <div class="item-row"><span class="item-name">Ballas Signature</span><span class="item-price">$550</span><input type="number" class="qty" data-price="550" data-alc="false" value="0"></div>
+        </div>
+
+        <div class="category">
+            <h3>🍹 ALCOHOLIC</h3>
+            <div class="item-row"><span class="item-name">Purple Reign</span><span class="item-price">$610</span><input type="number" class="qty" data-price="610" data-alc="true" value="0"></div>
+            <div class="item-row"><span class="item-name">Purple Boost</span><span class="item-price">$610</span><input type="number" class="qty" data-price="610" data-alc="true" value="0"></div>
+            <div class="item-row"><span class="item-name">Bier</span><span class="item-price">$610</span><input type="number" class="qty" data-price="610" data-alc="true" value="0"></div>
+        </div>
+    </div>
+
+    <div class="footer-total">
+        <span>GESAMTSUMME:</span>
+        <span id="total-price">$0</span>
+    </div>
+
+    <div class="made-by">MADE BY J0NASBR0T</div>
+</div>
+
+<script>
+    let deliveryCost = 0;
+
+    function selectZone(element) {
+        document.querySelectorAll('.zone-option').forEach(opt => opt.classList.remove('active'));
+        element.classList.add('active');
+        deliveryCost = parseInt(element.getAttribute('data-delivery'));
+        calculate();
+    }
+
+    function resetAll() {
+        document.querySelectorAll('.qty').forEach(i => i.value = 0);
+        document.getElementById('target-price').value = "";
+        document.getElementById('discount').value = 0;
+        deliveryCost = 0;
+        document.querySelectorAll('.zone-option').forEach(opt => opt.classList.remove('active'));
+        calculate();
+    }
+
+    function fillExactByPrice() {
+        const target = parseInt(document.getElementById('target-price').value);
+        const alcoholAllowed = document.getElementById('allow-alcohol').checked;
+
+        if (isNaN(target) || target <= 0) {
+            alert("Gewünschten Preis eingeben!");
+            return;
+        }
+
+        const allInputs = Array.from(document.querySelectorAll('.qty'));
+        allInputs.forEach(i => i.value = 0);
+
+        const availableItems = allInputs.map(input => ({
+            input: input,
+            price: parseInt(input.dataset.price),
+            isAlcohol: input.dataset.alc === "true"
+        })).filter(item => (alcoholAllowed || !item.isAlcohol) && item.price <= target);
+
+        if (availableItems.length === 0) return;
+
+        let bestCombination = [];
+        let minDiff = target;
+
+        for (let i = 0; i < 500; i++) {
+            let tempSum = 0;
+            let tempCounts = new Map();
+
+            while (tempSum < target) {
+                const item = availableItems[Math.floor(Math.random() * availableItems.length)];
+                if (tempSum + item.price <= target) {
+                    tempSum += item.price;
+                    tempCounts.set(item.input, (tempCounts.get(item.input) || 0) + 1);
+                } else {
+                    break; 
+                }
+            }
+
+            let diff = target - tempSum;
+            if (diff < minDiff) {
+                minDiff = diff;
+                bestCombination = Array.from(tempCounts.entries());
+            }
+            if (minDiff === 0) break;
+        }
+
+        bestCombination.forEach(([inputField, count]) => {
+            inputField.value = count;
+        });
+
+        calculate();
+    }
+
+    function calculate() {
+        let subtotal = 0;
+        document.querySelectorAll('.qty').forEach(input => {
+            subtotal += (parseInt(input.value) || 0) * (parseInt(input.dataset.price) || 0);
+        });
+
+        let total = subtotal + deliveryCost;
+        const discount = parseInt(document.getElementById('discount').value) || 0;
+        if(discount > 0) total *= (1 - (discount / 100));
+
+        document.getElementById('total-price').innerText = '$' + Math.round(total).toLocaleString('de-DE');
+    }
+
+    document.querySelectorAll('.qty, #discount').forEach(input => {
+        input.addEventListener('input', calculate);
+    });
+</script>
+
+</body>
+</html>
